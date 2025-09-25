@@ -12,8 +12,6 @@ JSON Schema for the DataGEMS extended Croissant RecordSet with **real-time profi
 This schema defines the structure for **real-time profiling** features:
 - **Streaming window management** (`dg:windowSpec`, `dg:windowState`, `dg:rollingStats`)
 - **Live connectivity & plug-and-play** (`dg:changefeed`, `dg:queryService`)
-- **Real-time observability** (`dg:metrics`, `dg:observability`)
-- **Dynamic data quality** (`dg:qualityRules`, `dg:privacy`, `dg:access`)
 
 ## Usage
 
