@@ -107,40 +107,6 @@
         "endpoint": {"type": "string"}
       }
     },
-    "dg:capabilities": {
-      "type": "array",
-      "description": "List of supported capabilities",
-      "items": {"type": "string"}
-    },
-    "dg:lineage": {
-      "type": "object",
-      "description": "Data lineage information"
-    },
-    "dg:related": {
-      "type": "object",
-      "description": "Related datasets and resources"
-    },
-    "dg:metrics": {
-      "type": "object",
-      "description": "Performance and operational metrics"
-    },
-    "dg:observability": {
-      "type": "object",
-      "description": "Observability and monitoring configuration"
-    },
-    "dg:qualityRules": {
-      "type": "array",
-      "description": "Data quality validation rules",
-      "items": {"type": "object"}
-    },
-    "dg:privacy": {
-      "type": "object",
-      "description": "Privacy and compliance settings"
-    },
-    "dg:access": {
-      "type": "object",
-      "description": "Access control and permissions"
-    }
   },
   "required": ["@type", "@id", "name"],
   "additionalProperties": true
