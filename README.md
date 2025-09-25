@@ -54,17 +54,12 @@ The extended Croissant profile output conforms to **[dg-recordset-rt.schema.json
 ### Live Connectivity & Plug-and-play
 - **Change Data Capture** (`dg:changefeed`): Kafka-based streaming integration
 - **Query Service** (`dg:queryService`): Arrow Flight real-time query interface
-- **Capabilities** (`dg:capabilities`): Supported real-time operations
 
 ### Operational Observability
 - **Rolling Statistics** (`dg:rollingStats`): Min/max, distinct counts, null fractions
 - **Metrics & Monitoring** (`dg:metrics`, `dg:observability`): Performance tracking
-- **Quality Rules** (`dg:qualityRules`): Dynamic data quality validation
 
-### Data Governance
-- **Privacy Controls** (`dg:privacy`): Real-time privacy compliance
-- **Access Management** (`dg:access`): Dynamic access control
-- **Lineage Tracking** (`dg:lineage`): Data provenance in streaming context
+
 
 ## 📚 Documentation Structure
 
@@ -72,8 +67,7 @@ The extended Croissant profile output conforms to **[dg-recordset-rt.schema.json
 |-----------|-------------|---------|
 | **Schema** | [dg-recordset-rt.schema.json](real_time_schemas/dg-recordset-rt.schema.json) | Normative validation schema |
 | **Examples** | [measurements_rt.json](real_time_examples/measurements_rt.json) | Reference implementation |
-| **Schemas Guide** | [real_time_schemas/README.md](real_time_schemas/README.md) | Schema documentation |
-| **Examples Guide** | [real_time_examples/README.md](real_time_examples/README.md) | Usage examples |
+
 
 ## 🔗 Standards Compliance
 
@@ -105,14 +99,6 @@ jsonschema -i your_dataset.json real_time_schemas/dg-recordset-rt.schema.json
 }
 ```
 
-## 🎯 Use Cases
-
-- **Streaming Analytics**: Real-time data pipeline profiling
-- **IoT Data Management**: Sensor data quality monitoring  
-- **Financial Trading**: Live market data validation
-- **Operational Monitoring**: System metrics and observability
-- **Research Datasets**: Dynamic academic data profiling
-
 ## 📖 References
 
 - **Schema Documentation**: See [§2.4](real_time_schemas/README.md) for detailed schema specifications
@@ -120,5 +106,3 @@ jsonschema -i your_dataset.json real_time_schemas/dg-recordset-rt.schema.json
 - **Extended Profile**: The "extended Croissant profile" output conforms to **[dg-recordset-rt.schema.json](real_time_schemas/dg-recordset-rt.schema.json)**
 
 ---
-
-**🔄 Real-time Profiling** • **📊 Extended Croissant** • **🚀 Streaming Ready**
