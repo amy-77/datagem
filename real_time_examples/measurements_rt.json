@@ -1,0 +1,46 @@
+{
+  "@type": "RecordSet",
+  "@id": "rs:measurements_rt",
+  "name": "Measurements (Real-time)",
+  "dg:profileVersion": "1.0.0",
+  "dg:windowSpec": {
+    "type": "sliding",
+    "size": "PT15M",
+    "slide": "PT1M",
+    "timeAttribute": "eventTime"
+  },
+  "dg:windowState": {
+    "asOf": "2025-09-23T12:34:56Z",
+    "rows": 1245678,
+    "watermark": "2025-09-23T12:33:20Z"
+  },
+  "dg:latestSchema": {
+    "fields": [
+      {"name": "id", "type": "string", "nullable": false},
+      {"name": "eventTime", "type": "timestamp", "nullable": false},
+      {"name": "value", "type": "double", "nullable": false}
+    ]
+  },
+  "dg:rollingStats": {
+    "minMax": {
+      "value": {"min": -3.2, "max": 98.7}
+    },
+    "approxDistinct": {
+      "id": 452301
+    },
+    "nullFraction": {
+      "value": 0.0
+    }
+  },
+  "dg:changefeed": {
+    "protocol": "kafka",
+    "endpoint": "kafka+ssl://broker:9093",
+    "topicOrPath": "measurements.cdc",
+    "format": "avro",
+    "keyFields": ["id"]
+  },
+  "dg:queryService": {
+    "engine": "arrow-flight",
+    "endpoint": "grpc://rt-gateway:31337"
+  }
+}
