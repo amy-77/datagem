@@ -1,0 +1,147 @@
+{
+  "$id": "https://amy-77.github.io/datagem/real_time_schemas/dg-recordset-rt.schema.json",
+  "title": "DataGEMS Real-time Profiling - Extended Croissant Profile (RecordSet dg:*)",
+  "description": "JSON Schema for DataGEMS extended Croissant RecordSet with real-time profiling and streaming capabilities",
+  "type": "object",
+  "properties": {
+    "@type": {
+      "type": "string",
+      "const": "RecordSet"
+    },
+    "@id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "dg:profileVersion": {
+      "type": "string",
+      "description": "Version of the DataGEMS profile specification"
+    },
+    "dg:windowSpec": {
+      "type": "object",
+      "description": "Specification for windowing configuration",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["sliding", "tumbling", "session"]
+        },
+        "size": {
+          "type": "string",
+          "description": "Window size in ISO-8601 duration format"
+        },
+        "slide": {
+          "type": "string",
+          "description": "Slide interval in ISO-8601 duration format"
+        },
+        "timeAttribute": {
+          "type": "string",
+          "description": "Name of the time attribute field"
+        }
+      }
+    },
+    "dg:windowState": {
+      "type": "object",
+      "description": "Current state of the windowing system",
+      "properties": {
+        "asOf": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "watermark": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "dg:latestSchema": {
+      "type": "object",
+      "description": "Latest schema definition",
+      "properties": {
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "type": {"type": "string"},
+              "nullable": {"type": "boolean"}
+            },
+            "required": ["name", "type"]
+          }
+        }
+      }
+    },
+    "dg:rollingStats": {
+      "type": "object",
+      "description": "Rolling statistics for the dataset",
+      "properties": {
+        "minMax": {"type": "object"},
+        "approxDistinct": {"type": "object"},
+        "nullFraction": {"type": "object"}
+      }
+    },
+    "dg:changefeed": {
+      "type": "object",
+      "description": "Change data capture configuration",
+      "properties": {
+        "protocol": {"type": "string"},
+        "endpoint": {"type": "string"},
+        "topicOrPath": {"type": "string"},
+        "format": {"type": "string"},
+        "keyFields": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "dg:queryService": {
+      "type": "object",
+      "description": "Query service endpoint configuration",
+      "properties": {
+        "engine": {"type": "string"},
+        "endpoint": {"type": "string"}
+      }
+    },
+    "dg:capabilities": {
+      "type": "array",
+      "description": "List of supported capabilities",
+      "items": {"type": "string"}
+    },
+    "dg:lineage": {
+      "type": "object",
+      "description": "Data lineage information"
+    },
+    "dg:related": {
+      "type": "object",
+      "description": "Related datasets and resources"
+    },
+    "dg:metrics": {
+      "type": "object",
+      "description": "Performance and operational metrics"
+    },
+    "dg:observability": {
+      "type": "object",
+      "description": "Observability and monitoring configuration"
+    },
+    "dg:qualityRules": {
+      "type": "array",
+      "description": "Data quality validation rules",
+      "items": {"type": "object"}
+    },
+    "dg:privacy": {
+      "type": "object",
+      "description": "Privacy and compliance settings"
+    },
+    "dg:access": {
+      "type": "object",
+      "description": "Access control and permissions"
+    }
+  },
+  "required": ["@type", "@id", "name"],
+  "additionalProperties": true
+}
