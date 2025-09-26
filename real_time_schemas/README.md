@@ -9,34 +9,18 @@ JSON Schema for the DataGEMS extended Croissant RecordSet with **real-time profi
 
 **Canonical URL:** `https://github.com/amy-77/datagem/blob/main/real_time_schemas/dg-recordset-rt.schema.json`
 
-This schema defines the structure for **real-time profiling** features:
-- **Streaming window management** (`dg:windowSpec`, `dg:windowState`, `dg:rollingStats`)
-- **Live connectivity & plug-and-play** (`dg:changefeed`, `dg:queryService`)
+## What it defines (two-layer profile inside RecordSet):
 
-## Usage
+### Layer 1 — Schema (stable): fields/units/keys; pointer to eventTime; versioning on change.
 
-You can validate your extended Croissant profiles against this schema using any JSON Schema validator:
+### Layer 2 — Window Summaries & Tiny Models (refreshed every 10 min):
+per-variable median/MAD, {p5,p50,p95}, count/min/max/mean/var, missingRate; optional
+spatialContext (kNN/region) and short-horizon params (e.g., AR(1): phi/μ/σ_resid).
 
-```bash
-# Using ajv-cli
-npx ajv-cli validate -s schemas/dg-recordset-rt.schema.json -d examples/measurements_rt.json
+Timing & observability: dg:time, dg:windowSpec (model/length/slide/lateness), dg:observability.
 
-# Using python jsonschema
-python -c "
-import json
-from jsonschema import validate
+Detection hooks: dg:detectors, dg:outputs (Anomaly List, Risk Map).
 
-with open('schemas/dg-recordset-rt.schema.json') as f:
-    schema = json.load(f)
-    
-with open('examples/measurements_rt.json') as f:
-    instance = json.load(f)
-    
-validate(instance, schema)
-print('✓ Valid')
-"
-```
+Change/audit: dg:changefeed.
 
-## Examples
-
-See the `../examples/` directory for example instances that conform to this schema.
+Backward-compatible: Generic/Distribution unchanged; consumers that ignore dg:* still work.
