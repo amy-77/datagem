@@ -98,11 +98,3 @@ jsonschema -i your_dataset.json real_time_schemas/dg-recordset-rt.schema.json
   }
 }
 ```
-
-## 📖 References
-
-- **Schema Documentation**: See [§2.4](real_time_schemas/README.md) for detailed schema specifications
-- **Example Usage**: See [§3.2](real_time_examples/README.md) for implementation examples
-- **Extended Profile**: The "extended Croissant profile" output conforms to **[dg-recordset-rt.schema.json](real_time_schemas/dg-recordset-rt.schema.json)**
-
----
