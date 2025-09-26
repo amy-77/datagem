@@ -1,113 +1,112 @@
 {
   "$id": "https://amy-77.github.io/datagem/real_time_schemas/dg-recordset-rt.schema.json",
-  "title": "DataGEMS Real-time Profiling - Extended Croissant Profile (RecordSet dg:*)",
-  "description": "JSON Schema for DataGEMS extended Croissant RecordSet with real-time profiling and streaming capabilities",
+  "title": "DataGEMS Real-time Profiling — Extended Croissant RecordSet (dg:*)",
+  "description": "Two-layer profile for 10-minute time-series; detection-first",
   "type": "object",
   "properties": {
-    "@type": {
-      "type": "string",
-      "const": "RecordSet"
-    },
-    "@id": {
-      "type": "string"
-    },
-    "name": {
-      "type": "string"
-    },
-    "dg:profileVersion": {
-      "type": "string",
-      "description": "Version of the DataGEMS profile specification"
+    "@type": {"type":"string","const":"RecordSet"},
+    "@id": {"type":"string"},
+    "name": {"type":"string"},
+
+    "dg:profileVersion": {"type":"string"},
+
+    "dg:time": {
+      "type":"object",
+      "properties":{"eventTime":{"type":"string"},"timezone":{"type":"string","default":"UTC"}},
+      "required":["eventTime"]
     },
     "dg:windowSpec": {
-      "type": "object",
-      "description": "Specification for windowing configuration",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["sliding", "tumbling", "session"]
-        },
-        "size": {
-          "type": "string",
-          "description": "Window size in ISO-8601 duration format"
-        },
-        "slide": {
-          "type": "string",
-          "description": "Slide interval in ISO-8601 duration format"
-        },
-        "timeAttribute": {
-          "type": "string",
-          "description": "Name of the time attribute field"
-        }
-      }
+      "type":"object",
+      "properties":{
+        "model":{"type":"string","enum":["sliding","tumbling","session"]},
+        "length":{"type":"string"},
+        "slide":{"type":"string"},
+        "lateness":{"type":"string"}
+      },
+      "required":["model","length"]
     },
-    "dg:windowState": {
-      "type": "object",
-      "description": "Current state of the windowing system",
-      "properties": {
-        "asOf": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "rows": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "watermark": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "dg:latestSchema": {
-      "type": "object",
-      "description": "Latest schema definition",
-      "properties": {
-        "fields": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {"type": "string"},
-              "type": {"type": "string"},
-              "nullable": {"type": "boolean"}
+
+    "dg:schema": {
+      "type":"object",
+      "properties":{
+        "version":{"type":"integer","minimum":1},
+        "changedAt":{"type":"string","format":"date-time"},
+        "fields":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "properties":{
+              "name":{"type":"string"},
+              "type":{"type":"string"},
+              "unit":{"type":"string"},
+              "key":{"type":"boolean"},
+              "nullable":{"type":"boolean"}
             },
-            "required": ["name", "type"]
+            "required":["name","type"]
           }
         }
-      }
+      },
+      "required":["fields"]
     },
+
     "dg:rollingStats": {
-      "type": "object",
-      "description": "Rolling statistics for the dataset",
-      "properties": {
-        "minMax": {"type": "object"},
-        "approxDistinct": {"type": "object"},
-        "nullFraction": {"type": "object"}
+      "type":"object",
+      "additionalProperties":{
+        "type":"object",
+        "properties":{
+          "count":{"type":"integer","minimum":0},
+          "min":{"type":"number"},
+          "max":{"type":"number"},
+          "mean":{"type":"number"},
+          "var":{"type":"number"},
+          "median":{"type":"number"},
+          "mad":{"type":"number"},
+          "quantiles":{"type":"object","properties":{"p5":{"type":"number"},"p50":{"type":"number"},"p95":{"type":"number"}}},
+          "missingRate":{"type":"number","minimum":0,"maximum":1},
+          "sketch":{"type":"object","properties":{"type":{"type":"string"},"impl":{"type":"string"}}}
+        },
+        "required":["count"]
+      },
+      "description":"Per-variable window summaries (keys = variable names)"
+    },
+
+    "dg:spatialContext": {
+      "type":"object",
+      "properties":{"mode":{"type":"string","enum":["knn","byRegion"]},"k":{"type":"integer"},"distance":{"type":"string"},"regionField":{"type":"string"}}
+    },
+
+    "dg:forecast": {
+      "type":"object",
+      "additionalProperties":{
+        "type":"object",
+        "properties":{"model":{"type":"string","enum":["persistence","AR1"]},"phi":{"type":"number"},"mu":{"type":"number"},"sigma2_resid":{"type":"number"}},
+        "required":["model"]
       }
     },
+
+    "dg:detectors": {"type":"array","items":{"type":"string"}},
+    "dg:outputs": {
+      "type":"object",
+      "properties":{
+        "anomalyList":{"type":"object","properties":{"refresh":{"type":"string"},"schemaRef":{"type":"string"}}},
+        "riskMap":{"type":"object","properties":{"horizons":{"type":"array","items":{"type":"string"}},"score":{"type":"string"}}}
+      }
+    },
+
     "dg:changefeed": {
-      "type": "object",
-      "description": "Change data capture configuration",
-      "properties": {
-        "protocol": {"type": "string"},
-        "endpoint": {"type": "string"},
-        "topicOrPath": {"type": "string"},
-        "format": {"type": "string"},
-        "keyFields": {
-          "type": "array",
-          "items": {"type": "string"}
-        }
-      }
+      "type":"object",
+      "properties":{"protocol":{"type":"string"},"endpoint":{"type":"string"},"topicOrPath":{"type":"string"},"format":{"type":"string"},"keyFields":{"type":"array","items":{"type":"string"}}}
     },
-    "dg:queryService": {
-      "type": "object",
-      "description": "Query service endpoint configuration",
-      "properties": {
-        "engine": {"type": "string"},
-        "endpoint": {"type": "string"}
-      }
+
+    "dg:observability": {
+      "type":"object",
+      "properties":{"throughputPerSec":{"type":"number"},"p95InterArrivalSec":{"type":"number"},"lastRefresh":{"type":"string","format":"date-time"}}
     },
+
+    "dg:windowState": { "type":"object" },            // optional, keep for compatibility
+    "dg:latestSchema": { "type":"object" }           // deprecated; keep but document as legacy
   },
-  "required": ["@type", "@id", "name"],
+
+  "required": ["@type","@id","name"],
   "additionalProperties": true
 }
