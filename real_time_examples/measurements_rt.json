@@ -1,46 +1,37 @@
 {
   "@type": "RecordSet",
-  "@id": "rs:measurements_rt",
-  "name": "Measurements (Real-time)",
-  "dg:profileVersion": "1.0.0",
-  "dg:windowSpec": {
-    "type": "sliding",
-    "size": "PT15M",
-    "slide": "PT1M",
-    "timeAttribute": "eventTime"
-  },
-  "dg:windowState": {
-    "asOf": "2025-09-23T12:34:56Z",
-    "rows": 1245678,
-    "watermark": "2025-09-23T12:33:20Z"
-  },
-  "dg:latestSchema": {
+  "name": "weather.measurements",
+  "dg:profileVersion": "0.2.0",
+
+  "dg:time": { "eventTime": "eventTime", "timezone": "UTC" },
+  "dg:windowSpec": { "model": "sliding", "length": "60m", "slide": "10m", "lateness": "30s" },
+
+  "dg:schema": {
+    "version": 3,
+    "changedAt": "2025-09-26T12:30:00Z",
     "fields": [
-      {"name": "id", "type": "string", "nullable": false},
-      {"name": "eventTime", "type": "timestamp", "nullable": false},
-      {"name": "value", "type": "double", "nullable": false}
+      {"name":"id","type":"string","key":true},
+      {"name":"eventTime","type":"datetime"},
+      {"name":"lat","type":"number","unit":"deg"},
+      {"name":"lon","type":"number","unit":"deg"},
+      {"name":"elevation","type":"number","unit":"m","nullable":true},
+      {"name":"region","type":"string","nullable":true},
+      {"name":"temp","type":"number","unit":"°C"},
+      {"name":"hum","type":"number","unit":"ratio"},
+      {"name":"wind","type":"number","unit":"m/s"},
+      {"name":"press","type":"number","unit":"hPa"},
+      {"name":"rain","type":"number","unit":"mm"}
     ]
   },
+
   "dg:rollingStats": {
-    "minMax": {
-      "value": {"min": -3.2, "max": 98.7}
+    "temp": {
+      "count": 360000,
+      "min": -2.1, "max": 42.3, "mean": 18.4, "var": 6.2,
+      "median": 18.1, "mad": 1.7,
+      "quantiles": {"p5": 12.3, "p50": 18.1, "p95": 24.6},
+      "missingRate": 0.01
     },
-    "approxDistinct": {
-      "id": 452301
-    },
-    "nullFraction": {
-      "value": 0.0
-    }
-  },
-  "dg:changefeed": {
-    "protocol": "kafka",
-    "endpoint": "kafka+ssl://broker:9093",
-    "topicOrPath": "measurements.cdc",
-    "format": "avro",
-    "keyFields": ["id"]
-  },
-  "dg:queryService": {
-    "engine": "arrow-flight",
-    "endpoint": "grpc://rt-gateway:31337"
-  }
-}
+    "hum": {
+      "count": 360000,
+      "median": 0.62, "mad": 0.
