@@ -9,24 +9,34 @@ A minimal example of a **real-time profiling** dataset using the DataGEMS extend
 
 **Schema:** [`dg-recordset-rt.schema.json`](../real_time_schemas/dg-recordset-rt.schema.json)
 
-This example demonstrates **real-time profiling** features:
-- **Streaming window configuration** (`dg:windowSpec`): 15-minute sliding window with 1-minute slides
-- **Live window state tracking** (`dg:windowState`): Current row count and watermark
-- **Dynamic schema evolution** (`dg:latestSchema`): Latest field definitions
-- **Real-time rolling statistics** (`dg:rollingStats`): Min/max, approximate distinct counts, null fractions
-- **Live change data capture** (`dg:changefeed`): Kafka-based CDC configuration
-- **Interactive query interface** (`dg:queryService`): Arrow Flight query endpoint
+### What it shows (two-layer profile):
+
+Timing & windowing: dg:time (eventTime, timezone) and dg:windowSpec
+(e.g., sliding window: length 60m, slide 10m, optional lateness)
+
+Layer 1 — Schema (stable): dg:schema with fields {name,type,unit?,key?,nullable?}, plus version/changedAt.
+
+Layer 2 — Window summaries (refreshed every update): dg:rollingStats per variable
+(median, MAD, {p5,p50,p95}, count/min/max/mean/var, missingRate; optional t-digest metadata).
+
+Detection hooks (optional in minimal): dg:detectors and dg:outputs (Anomaly List, Risk Map).
+
+The example is detection-first and avoids duplicating raw measurements; it only carries metadata needed to interpret current alerts.
 
 ## Key Real-time Profiling Features
 
-1. **Streaming Data Windowing**: Shows how real-time streaming data is windowed and tracked
-2. **Live Connectivity & Plug-and-play**: Real-time access via changefeed and query service
-3. **Dynamic Operational Metadata**: Live window state, real-time statistics, and schema evolution
-4. **Standards Compliance**: Extends Croissant RecordSet with `dg:*` namespace for real-time profiling
+Two-layer profile: Schema remains stable; summaries/models refresh each 10-minute update.
 
-## Usage in Documentation
+Detection-ready stats: Robust bands (median/MAD/P5–P95) and classic moments for temporal/spatial/short-horizon checks.
 
-These examples can be referenced in technical documentation using:
+Backward compatible: Pure dg:* namespace extension; Croissant Generic/Distribution unchanged.
 
-- **Schema Link**: `https://github.com/datagems-eosc/dataset-profiler/blob/main/schemas/dg-recordset-rt.schema.json`
-- **Example Link**: `https://github.com/datagems-eosc/dataset-profiler/blob/main/examples/measurements_rt.json`
+Optional add-ons (may appear in full examples):
+
+dg:spatialContext (kNN/region)
+
+dg:forecast (e.g., AR(1) params)
+
+dg:observability (throughput, inter-arrival p95, lastRefresh)
+
+dg:changefeed (audit/drift stream)
